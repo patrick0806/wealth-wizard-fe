@@ -19,7 +19,7 @@ export function TransacationMenu() {
                     <DropdownMenuLabel>Cadastro de transações</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => setShowIncomeDrawer(true)}>
-                        <TrendingUp className="mr-2 h-4 w-4 text-green-500" />
+                        <TrendingUp className="mr-2 h-4 w-4 text-success" />
                         <span>Cadastrar Entrada</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setShowExpenseDrawer(true)}>
