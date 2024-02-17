@@ -73,7 +73,7 @@ export function DrawerIncome({ isOpen, setIsOpen }: DrawerIncomeProps) {
                         <DrawerDescription>Informe os detalhes de sua nova entrada</DrawerDescription>
                     </DrawerHeader>
                     <Form {...form}>
-                        <div className="px-4">
+                        <div className="px-4 space-y-4">
                             <FormField
                                 control={form.control}
                                 name="value"
@@ -112,7 +112,7 @@ export function DrawerIncome({ isOpen, setIsOpen }: DrawerIncomeProps) {
                     <DrawerFooter>
                         <Button type="submit" onClick={form.handleSubmit(onSubmit)}>Cadastrar Entrada</Button>
                         <DrawerClose asChild>
-                            <Button variant="outline" onClick={() => setIsOpen(false)}>Cancelar</Button>
+                            <Button variant="outline" className="bg-destructive text-white">Cancelar</Button>
                         </DrawerClose>
                     </DrawerFooter>
                 </div>

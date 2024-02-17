@@ -168,7 +168,7 @@ export function DrawerExpense({ isOpen, setIsOpen }: DrawerIncomeProps) {
                     <DrawerFooter>
                         <Button type="submit" onClick={form.handleSubmit(onSubmit)}>Cadastrar Entrada</Button>
                         <DrawerClose asChild>
-                            <Button variant="outline">Cancelar</Button>
+                            <Button variant="outline" className="bg-destructive text-white">Cancelar</Button>
                         </DrawerClose>
                     </DrawerFooter>
                 </div>
