@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
+import { useToast } from "@/components/ui/use-toast"
+import { saveUser } from "@/service/user"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
@@ -19,6 +21,7 @@ const formSchema = z.object({
 
 export function Register() {
     const [isValidatingUser, setIsValidateUser] = useState(false);
+    const { toast } = useToast();
     const router = useRouter()
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -29,13 +32,20 @@ export function Register() {
         },
     })
 
-    const onSubmit = (data: z.infer<typeof formSchema>) => {
+    const onSubmit = async (data: z.infer<typeof formSchema>) => {
         setIsValidateUser(true)
-        setTimeout(() => {
+        console.log("Here")
+        try {
+            await saveUser(data);
             router.push("/dashboard")
+        } catch (error) {
+            toast({
+                variant: 'destructive',
+                title: 'Houve um erro ao criar seu usário',
+                description: 'Por favor, tente novamente mais tarde',
+            })
             setIsValidateUser(false)
-        }, 2000)
-        console.log(data);
+        };
     }
 
     return (
