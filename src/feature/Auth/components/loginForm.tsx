@@ -1,16 +1,75 @@
+'use client'
+import z from "zod"
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod"
+
 import { TbBrandFacebook, TbBrandGoogle } from "react-icons/tb"
 import { HorizontalSeparator } from "@/components/horizontalSeparator";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Spinner } from "@/components/spinner";
+
+const LoginFormSchema = z.object({
+    email: z.string().min(1, "Email obrigatorio").email('Insira uma email valido'),
+    password: z.string().min(6, "Senha deve ter pelo menos 6 caracteres"),
+})
 
 export function LoginForm() {
+    const [isSubmitting, setIsSubmitting] = useState(false)
+
+    const form = useForm({
+        resolver: zodResolver(LoginFormSchema),
+        defaultValues: {
+            email: '',
+            password: ''
+        }
+    });
+    const onSubimit = async (data: z.infer<typeof LoginFormSchema>) => {
+        setIsSubmitting(true)
+        console.log(data)
+
+        const promise = new Promise((resolve) => setTimeout(resolve, 2000))
+        await promise
+
+        setIsSubmitting(false)
+    }
+
     return (
         <div className=" w-full md:w-1/2">
-            <form className="w-full flex flex-col gap-4 mt-8">
-                <Input type="email" placeholder="Email" />
-                <Input type="password" placeholder="Senha" />
-                <Button type="submit" className="bg-primary">Entrar</Button>
-            </form>
+            <Form {...form}>
+                <form className="w-full flex flex-col gap-4 mt-8" onSubmit={form.handleSubmit(onSubimit)}>
+                    <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormControl>
+                                    <Input type="email" placeholder="Email" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="password"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormControl>
+                                    <Input type="password" placeholder="Senha" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <Button type="submit" className="bg-primary" disabled={isSubmitting}>
+                        {isSubmitting && <Spinner />}
+                        <p>{isSubmitting ? 'Entrando' : 'Entrar'}</p>
+                    </Button>
+                </form>
+            </Form>
             <div className="my-2 flex items-center gap-4">
                 <HorizontalSeparator className="flex-1" />
                 <p className="flex-2">ou continue com</p>
