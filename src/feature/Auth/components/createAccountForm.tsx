@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Spinner } from "@/components/spinner";
+import { useRouter } from "next/navigation";
 
 
 export const CreateAccountFormSchema = z.object({
@@ -27,6 +28,7 @@ export const CreateAccountFormSchema = z.object({
 
 export function CreateAccountForm() {
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const router = useRouter();
 
     const form = useForm({
         resolver: zodResolver(CreateAccountFormSchema),
@@ -45,6 +47,7 @@ export function CreateAccountForm() {
         await promise
 
         setIsSubmitting(false)
+        router.push('/dashboard')
     }
     return (
         <div className="w-full md:w-1/2">

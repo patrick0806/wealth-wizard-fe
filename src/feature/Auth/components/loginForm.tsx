@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Spinner } from "@/components/spinner";
+import { useRouter } from "next/navigation";
 
 const LoginFormSchema = z.object({
     email: z.string().min(1, "Email obrigatorio").email('Insira uma email valido'),
@@ -18,6 +19,7 @@ const LoginFormSchema = z.object({
 
 export function LoginForm() {
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const router = useRouter()
 
     const form = useForm({
         resolver: zodResolver(LoginFormSchema),
@@ -34,6 +36,7 @@ export function LoginForm() {
         await promise
 
         setIsSubmitting(false)
+        router.push('/dashboard')
     }
 
     return (
