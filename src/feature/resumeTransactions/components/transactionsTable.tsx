@@ -88,6 +88,46 @@ const data: Transaction[] = [
         category: "Freela",
         type: "INCOME",
     },
+    {
+        id: "1",
+        description: "Salário",
+        value: 5000,
+        date: new Date(),
+        category: "Freela",
+        type: "INCOME",
+    },
+    {
+        id: "2",
+        description: "Salário",
+        value: 5000,
+        date: new Date(),
+        category: "Freela",
+        type: "INCOME",
+    },
+    {
+        id: "3",
+        description: "Salário",
+        value: 5000,
+        date: new Date(),
+        category: "Freela",
+        type: "INCOME",
+    },
+    {
+        id: "4",
+        description: "Salário",
+        value: 5000,
+        date: new Date(),
+        category: "Freela",
+        type: "INCOME",
+    },
+    {
+        id: "5",
+        description: "Salário",
+        value: 5000,
+        date: new Date(),
+        category: "Freela",
+        type: "INCOME",
+    },
 ]
 
 export const columns: ColumnDef<Transaction>[] = [
@@ -114,13 +154,6 @@ export const columns: ColumnDef<Transaction>[] = [
         enableHiding: false,
     },
     {
-        accessorKey: "category",
-        header: "Categoria",
-        cell: ({ row }) => (
-            <div className="capitalize">{row.getValue("category")}</div>
-        ),
-    },
-    {
         accessorKey: "description",
         header: "Descricão",
     },
@@ -138,10 +171,17 @@ export const columns: ColumnDef<Transaction>[] = [
         },
     },
     {
+        accessorKey: "category",
+        header: "Categoria",
+        cell: ({ row }) => (
+            <div className="capitalize">{row.getValue("category")}</div>
+        ),
+    },
+    {
         accessorKey: "type",
         header: "Tipo",
         cell: ({ row }) => (
-            <div className="capitalize">{row.getValue("type")}</div>
+            <div className="capitalize">{row.getValue("type") === "INCOME" ? "Receita" : "Despesa"}</div>
         ),
     },
     {
@@ -161,9 +201,21 @@ export function TransactionsTable() {
     const [columnVisibility, setColumnVisibility] =
         React.useState<VisibilityState>({})
     const [rowSelection, setRowSelection] = React.useState({})
+    const [filterType, setFilterType] = React.useState<string | undefined>()
+
+    const filteredData = React.useMemo(() => {
+        if (!filterType) {
+            return data;
+        }
+        return data.filter(transaction => transaction.type === filterType);
+    }, [filterType]);
+
+    const handleCleanFilters = () => {
+        setFilterType(undefined);
+    }
 
     const table = useReactTable({
-        data,
+        data: filteredData,
         columns,
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
@@ -182,30 +234,33 @@ export function TransactionsTable() {
     })
 
     return (
-        <div className="w-full">
+        <div className="w-full border border-gray-800 bg-background py-0 px-4 rounded-lg">
             <div className="flex items-center justify-between py-4">
-                <h3 className="text-3xl font-medium">Transações</h3>
-                <div className="w-1/6">
-                    <Select onValueChange={(value) => console.log(value)}>
-                        <SelectTrigger>
-                            <SelectValue placeholder="Tipo de transação" className="w-[50px]" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="INCOME">
-                                <div className="flex items-center gap-2">
-                                    Renda
-                                </div>
-                            </SelectItem>
-                            <SelectItem value="EXPENSE">
-                                <div className="flex items-center gap-2">
-                                    Despesa
-                                </div>
-                            </SelectItem>
-                        </SelectContent>
-                    </Select>
+                <h3 className="text-2xl font-medium text-gray-50/70">Transações</h3>
+                <div className="w-full flex items-end justify-end gap-5">
+                    <div className="w-44">
+                        <Select onValueChange={value => setFilterType(value)} value={filterType}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Tipo de transação" className="w-[50px]" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="INCOME">
+                                    <div className="flex items-center gap-2">
+                                        Renda
+                                    </div>
+                                </SelectItem>
+                                <SelectItem value="EXPENSE">
+                                    <div className="flex items-center gap-2">
+                                        Despesa
+                                    </div>
+                                </SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <Button variant="link" onClick={handleCleanFilters}>Limpar filtros</Button>
                 </div>
             </div>
-            <div className="rounded-md border">
+            <div>
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (

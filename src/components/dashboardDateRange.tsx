@@ -29,7 +29,7 @@ export function DashboardDateRange({
                     id="date"
                     variant={"outline"}
                     className={cn(
-                        "w-[300px] justify-start text-left font-normal",
+                        "w-full md:w-[300px] justify-start text-left font-normal",
                         !date && "text-muted-foreground"
                     )}
                 >
@@ -56,6 +56,8 @@ export function DashboardDateRange({
                     selected={date}
                     onSelect={setDate}
                     numberOfMonths={2}
+                    lang="ptBR"
+                    locale={ptBR}
                 />
             </PopoverContent>
         </Popover>

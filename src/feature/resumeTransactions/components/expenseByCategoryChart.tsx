@@ -31,7 +31,7 @@ export function ExpenseByCategoryChart() {
         <Doughnut
             data={doughnutData}
             options={{ plugins: { legend: { display: false } } }}
-            className="m-auto w-full h-full"
+            className="m-auto w-full h-full max-h-[450px]"
         />
     )
 }

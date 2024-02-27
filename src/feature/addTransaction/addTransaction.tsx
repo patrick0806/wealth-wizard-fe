@@ -25,21 +25,19 @@ import {
 } from "@/components/ui/drawer"
 
 import { AddExpenseForm } from "./components/addExpenseForm";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { TrendingDown, TrendingUp } from "lucide-react";
 import { SelectTransactionType } from "./components/selectTransactionType";
 import { AddIncomeForm } from "./components/addIncomeForm";
 
 export function AddTransaction() {
     const [open, setOpen] = React.useState(false)
-    const [selected, setSelected] = React.useState("");
+    const [selected, setSelected] = React.useState("income");
     const isDesktop = useMediaQuery("(min-width: 768px)")
 
     if (isDesktop) {
         return (
             <Dialog open={open} onOpenChange={() => {
                 setOpen(!open)
-                setSelected("")
+                setSelected("income")
             }}>
                 <DialogTrigger asChild>
                     <Button className="flex items-center gap-2">
