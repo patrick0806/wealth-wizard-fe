@@ -9,7 +9,9 @@ import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Spinner } from "@/components/spinner";
 import { useRouter } from "next/navigation";
-
+import { signUp } from "@/services/usecase/signUp";
+import { toast } from "@/components/ui/use-toast";
+import { XCircle } from "lucide-react";
 
 export const CreateAccountFormSchema = z.object({
     name: z.string().min(1, "Nome obrigatorio"),
@@ -41,14 +43,22 @@ export function CreateAccountForm() {
     });
     const onSubimit = async (data: z.infer<typeof CreateAccountFormSchema>) => {
         setIsSubmitting(true)
-        console.log(data)
-
-        const promise = new Promise((resolve) => setTimeout(resolve, 2000))
-        await promise
-
-        setIsSubmitting(false)
-        router.push('/dashboard')
+        try {
+            const userCredential = await signUp(data.name, data.email, data.password);
+            const token = await userCredential.user.getIdToken();
+            localStorage.setItem('token', token);
+            router.push('/dashboard')
+        } catch (error) {
+            toast({
+                title: 'Falha ao criar conta',
+                description: 'Por favor tente novamente',
+                variant: 'destructive',
+                action: (<XCircle />)
+            })
+            setIsSubmitting(false)
+        }
     }
+
     return (
         <div className="w-full md:w-1/2">
             <Form {...form}>

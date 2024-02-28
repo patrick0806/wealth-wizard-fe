@@ -4,13 +4,16 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod"
 
-import { TbBrandFacebook, TbBrandGoogle } from "react-icons/tb"
+import { TbBrandGoogle } from "react-icons/tb"
 import { HorizontalSeparator } from "@/components/horizontalSeparator";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Spinner } from "@/components/spinner";
 import { useRouter } from "next/navigation";
+import { XCircle } from "lucide-react";
+import { toast } from "@/components/ui/use-toast";
+import { googleSignIn, signIn } from "@/services/usecase/signIn";
 
 const LoginFormSchema = z.object({
     email: z.string().min(1, "Email obrigatorio").email('Insira uma email valido'),
@@ -30,13 +33,38 @@ export function LoginForm() {
     });
     const onSubimit = async (data: z.infer<typeof LoginFormSchema>) => {
         setIsSubmitting(true)
-        console.log(data)
+        try {
+            const userCredential = await signIn(data.email, data.password);
+            const token = await userCredential.user.getIdToken();
+            localStorage.setItem('token', token);
+            router.push('/dashboard')
+        } catch (error) {
+            toast({
+                title: 'Falha ao acessar conta',
+                description: 'Verifique seu email e senha',
+                variant: 'destructive',
+                action: <XCircle />
+            })
+            setIsSubmitting(false)
+        }
+    }
 
-        const promise = new Promise((resolve) => setTimeout(resolve, 2000))
-        await promise
-
-        setIsSubmitting(false)
-        router.push('/dashboard')
+    const handleGoogleSignIn = async () => {
+        setIsSubmitting(true)
+        try {
+            const userCredential = await googleSignIn();
+            const token = await userCredential.user.getIdToken();
+            localStorage.setItem('token', token);
+            router.push('/dashboard')
+        } catch (error) {
+            toast({
+                title: 'Falha ao entrar com o google',
+                description: 'Por favor tente novamente',
+                variant: 'destructive',
+                action: (<XCircle />)
+            })
+            setIsSubmitting(false)
+        }
     }
 
     return (
@@ -78,13 +106,11 @@ export function LoginForm() {
                 <p className="flex-2">ou continue com</p>
                 <HorizontalSeparator className="flex-1" />
             </div>
-            <Button className="w-full bg-gray-50 text-gray-800 mb-4 space-x-9 hover:text-white">
+            <Button
+                onClick={handleGoogleSignIn}
+                className="w-full bg-gray-50 text-gray-800 mb-4 space-x-9 hover:text-white">
                 <TbBrandGoogle size={18} />
                 <p>Entrar com o google</p>
-            </Button>
-            <Button className="w-full bg-blue-500 space-x-9">
-                <TbBrandFacebook size={18} />
-                <p>Entrar com o facebook</p>
             </Button>
         </div>
     )

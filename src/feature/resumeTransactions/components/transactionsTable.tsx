@@ -37,15 +37,7 @@ import {
 } from "@/components/ui/table"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { format } from "date-fns"
-
-export type Transaction = {
-    id: string
-    description: string,
-    value: number,
-    date: Date,
-    category: string,
-    type: string,
-}
+import { Transaction } from "@/types/transaction"
 
 const data: Transaction[] = [
     {

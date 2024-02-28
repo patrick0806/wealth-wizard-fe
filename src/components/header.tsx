@@ -21,6 +21,7 @@ export function Header() {
     const router = useRouter();
 
     function handleLogout() {
+        localStorage.removeItem("token");
         router.push("/")
     }
     return (
